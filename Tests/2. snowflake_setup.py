@@ -1,11 +1,8 @@
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from datetime import datetime
 import snowflake.connector
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 def snowflake_setup():
@@ -96,25 +93,7 @@ def snowflake_setup():
         conn.close()
         print("Snowflake connection closed.")
 
-# Define the DAG for Airflow
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime(2024, 11, 11),
-    'retries': 1,
-}
-
-with DAG(
-    'snowflake_setup_dag',
-    default_args=default_args,
-    description='DAG for setting up Snowflake warehouse, database, schema, and table',
-    schedule_interval=None,
-    catchup=False,
-) as dag:
-
-    setup_snowflake_task = PythonOperator(
-        task_id='setup_snowflake',
-        python_callable=snowflake_setup
-    )
-
-    setup_snowflake_task
+if __name__ == "__main__":
+    print("Starting Snowflake setup...")
+    snowflake_setup()
+    print("Snowflake setup complete.")

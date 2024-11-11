@@ -10,8 +10,6 @@ from selenium.webdriver.chrome.options import Options
 from io import StringIO, BytesIO
 from datetime import datetime
 from dotenv import load_dotenv
-from airflow import DAG
-from airflow.operators.python import PythonOperator
 
 load_dotenv()
 
@@ -23,6 +21,7 @@ s3_bucket_name = os.getenv('S3_BUCKET_NAME')
 
 # Function to initialize Selenium WebDriver
 def init_driver():
+    print("Initializing Selenium WebDriver...")
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
@@ -32,19 +31,25 @@ def init_driver():
     
     service = Service("/usr/local/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=chrome_options)
+    print("WebDriver initialized.")
     return driver
 
 # Function to download files and upload them to S3 using an in-memory buffer
 def download_and_upload_file(url, s3_dir, s3_bucket_name, aws_region, s3):
     if url:
+        print(f"Downloading file from {url}...")
         file_name = os.path.basename(url.split('?')[0])
         response = requests.get(url, stream=True)
         if response.status_code == 200:
             file_buffer = BytesIO(response.content)
             s3_key = f"{s3_dir}/{file_name}"
+            print(f"Uploading {file_name} to S3 bucket {s3_bucket_name}...")
             s3.upload_fileobj(file_buffer, s3_bucket_name, s3_key)
             s3_url = f"https://{s3_bucket_name}.s3.{aws_region}.amazonaws.com/{s3_key}"
+            print(f"File uploaded successfully: {s3_url}")
             return s3_url
+        else:
+            print(f"Failed to download file from {url}. Status code: {response.status_code}")
     return None
 
 # Function to handle PDF extraction
@@ -60,7 +65,7 @@ def extract_pdf_link(pdf_soup):
     return None
 
 # Function to scrape publications using Selenium and save data as a pandas DataFrame
-def scrape_publications_with_selenium(**kwargs):
+def scrape_publications_with_selenium():
     print("Starting publication scraping process...")
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key, aws_secret_access_key=aws_secret_key, region_name=aws_region)
     driver = init_driver()
@@ -130,52 +135,25 @@ def scrape_publications_with_selenium(**kwargs):
     print("Scraping process complete. Creating DataFrame...")
     df = pd.DataFrame(all_data)
     print("DataFrame created.")
-    
-    # Push the DataFrame to XCom for the next task
-    kwargs['ti'].xcom_push(key='scraped_data', value=df.to_json(orient='records'))
+    return df
 
 # Function to save the scraped data as a CSV file and upload to S3
-def save_and_upload_csv(**kwargs):
+def save_and_upload_csv(df):
     print("Saving DataFrame as CSV and uploading to S3...")
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key, aws_secret_access_key=aws_secret_key, region_name=aws_region)
     csv_buffer = StringIO()
-
-    # Pull the data from XCom
-    data_json = kwargs['ti'].xcom_pull(task_ids='scrape_publications_task', key='scraped_data')
-    df = pd.read_json(data_json)
-    
     df.to_csv(csv_buffer, index=False)
+
     s3_key = "raw/publications_data.csv"
     s3.put_object(Body=csv_buffer.getvalue(), Bucket=s3_bucket_name, Key=s3_key)
     print(f'CSV uploaded to S3 at: s3://{s3_bucket_name}/{s3_key}')
 
-# Define the DAG
-default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2024, 11, 11),
-    'retries': 1,
-}
+# Main execution
+if __name__ == "__main__":
+    # Step 1: Scrape Publications
+    publications_df = scrape_publications_with_selenium()
+    print("Scraping complete. DataFrame created.")
 
-with DAG(
-    dag_id='scrape_and_upload_publications_dag',
-    default_args=default_args,
-    schedule_interval=None,
-    catchup=False
-) as dag:
-
-    # Task to scrape publications
-    scrape_publications_task = PythonOperator(
-        task_id='scrape_publications_task',
-        python_callable=scrape_publications_with_selenium,
-        provide_context=True
-    )
-
-    # Task to save and upload CSV
-    save_and_upload_csv_task = PythonOperator(
-        task_id='save_and_upload_csv_task',
-        python_callable=save_and_upload_csv,
-        provide_context=True
-    )
-
-    # Define task dependencies
-    scrape_publications_task >> save_and_upload_csv_task
+    # Step 2: Save and upload the scraped data as a CSV
+    save_and_upload_csv(publications_df)
+    print("CSV uploaded successfully.")

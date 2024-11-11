@@ -1,6 +1,3 @@
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from datetime import datetime
 import os
 import snowflake.connector
 import boto3
@@ -8,8 +5,7 @@ import pandas as pd
 from io import StringIO
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+load_dotenv()  # Load environment variables from .env file
 
 def load_data_into_snowflake():
     """Reads CSV from S3 and loads it into Snowflake table using a merge operation."""
@@ -85,25 +81,7 @@ def load_data_into_snowflake():
         conn.close()
         print("Snowflake connection closed.")
 
-# Define the DAG for Airflow
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime(2024, 10, 22),
-    'retries': 1,
-}
-
-with DAG(
-    'snowflake_load_data_dag',
-    default_args=default_args,
-    description='DAG for loading data into Snowflake from S3',
-    schedule_interval=None,
-    catchup=False,
-) as dag:
-
-    load_data_task = PythonOperator(
-        task_id='load_data_into_snowflake',
-        python_callable=load_data_into_snowflake
-    )
-
-    load_data_task
+if __name__ == "__main__":
+    print("Starting the Snowflake data load script...")
+    load_data_into_snowflake()
+    print("Data load script completed.")
