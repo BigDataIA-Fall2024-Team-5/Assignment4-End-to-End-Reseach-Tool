@@ -82,7 +82,7 @@ def scrape_publications_with_selenium():
         base_url = f"https://rpc.cfainstitute.org/en/research-foundation/publications#first={page_num}&sort=%40officialz32xdate%20descending"
         print(f"Loading page {page_num // 10 + 1}...")
         driver.get(base_url)
-        time.sleep(5)
+        time.sleep(10)
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         publications = soup.find_all('div', class_='coveo-list-layout CoveoResult')
