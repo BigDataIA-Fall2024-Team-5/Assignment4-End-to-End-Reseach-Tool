@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button"; // Import Button component
 import {
   useCoAgent,
   useCoAgentStateRender,
@@ -127,6 +128,26 @@ export function ResearchCanvas() {
     }
   };
 
+  // Function to handle exporting the research draft as a .txt file
+  const exportDraftAsTxt = (fileName: string) => {
+    const element = document.createElement("a");
+    const file = new Blob([state.report || ""], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = fileName; // Name of the downloaded file
+    document.body.appendChild(element); // Required for Firefox compatibility
+    element.click();
+  };
+
+  // Function to handle exporting the research draft as PDF
+  const exportDraftAsPdf = () => {
+    exportDraftAsTxt("research_draft.pdf"); // Placeholder for PDF functionality
+  };
+
+  // Function to handle exporting the research draft as Codelabs
+  const exportDraftAsCodelabs = () => {
+    exportDraftAsTxt("research_draft_codelabs.txt"); // Placeholder for Codelabs functionality
+  };
+
   return (
     <div className="container w-full h-full p-10 bg-[#F5F8FF]">
       <div className="space-y-8">
@@ -178,10 +199,27 @@ export function ResearchCanvas() {
           )}
         </div>
 
+        {/* Research Draft Section */}
         <div className="flex flex-col h-full">
-          <h2 className="text-lg font-medium mb-3 text-primary">
-            Research Draft
-          </h2>
+          {/* Heading and Export Button */}
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-lg font-medium text-primary">Research Draft</h2>
+
+            {/* Export Buttons */}
+            <div className="space-x-2">
+              {/* Export as PDF Button */}
+              <Button onClick={exportDraftAsPdf} className="bg-[#6766FC] text-white">
+                Export as PDF
+              </Button>
+
+              {/* Export as Codelabs Button */}
+              <Button onClick={exportDraftAsCodelabs} className="bg-[#6766FC] text-white">
+                Export as Codelabs
+              </Button>
+            </div>
+          </div>
+
+          {/* Textarea for Research Draft */}
           <Textarea
             placeholder="Write your research draft here"
             value={state.report || ""}
