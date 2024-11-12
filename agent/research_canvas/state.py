@@ -1,9 +1,10 @@
+# state.py
 """
 This is the state definition for the AI.
 It defines the state of the agent and the state of the conversation.
 """
 
-from typing import List, TypedDict
+from typing import List, TypedDict, Optional
 from langgraph.graph import MessagesState
 
 class Resource(TypedDict):
@@ -21,6 +22,22 @@ class Log(TypedDict):
     message: str
     done: bool
 
+class Document(TypedDict):
+    """
+    Represents a document with an ID, title, and presigned URL.
+    """
+    id: int
+    title: str
+    pdf_link: str
+
+class RAGResult(TypedDict):
+    """
+    Represents a RAG (Retrieval-Augmented Generation) query result.
+    """
+    id: str
+    text: str
+    metadata: dict
+
 class AgentState(MessagesState):
     """
     This is the state of the agent.
@@ -31,3 +48,5 @@ class AgentState(MessagesState):
     report: str
     resources: List[Resource]
     logs: List[Log]
+    document_list: Optional[List[Document]]  # Stores available documents for selection
+    rag_query_result: Optional[List[RAGResult]]  # Stores results from RAG queries

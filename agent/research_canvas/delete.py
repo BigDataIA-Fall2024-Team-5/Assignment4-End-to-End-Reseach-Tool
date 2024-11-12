@@ -1,3 +1,4 @@
+#delete.py
 """Delete Resources"""
 
 import json
