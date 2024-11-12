@@ -78,11 +78,16 @@ WORKDIR /opt/airflow
 # Install additional Python dependencies
 RUN pip install --no-cache-dir \
     requests==2.32.3 \
-    boto3==1.35.45 \
-    selenium==4.25.0 \
+    boto3==1.35.57 \
+    selenium==4.26.1 \
     beautifulsoup4==4.12.3 \
     pandas==2.2.3 \
-    snowflake-connector-python==3.12.2 \
-    pymupdf==1.24.12
+    snowflake-connector-python==3.12.3 \
+    docling==2.4.2 \
+    pinecone-client==5.0.1 \
+    langchain-nvidia-ai-endpoints==0.3.5 \
+    langchain-pinecone==0.2.0 \
+    python-dotenv==1.0.1
+
 # Expose port 8080 (Airflow UI)
 EXPOSE 8080
