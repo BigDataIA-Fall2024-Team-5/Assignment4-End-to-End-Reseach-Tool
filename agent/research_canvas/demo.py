@@ -12,6 +12,7 @@ from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from copilotkit import CopilotKitSDK, LangGraphAgent
 from copilotkit.langchain import copilotkit_messages_to_langchain
 from research_canvas.agent import graph
+from research_canvas.export_router import router as export_router 
 
 app = FastAPI()
 sdk = CopilotKitSDK(
@@ -33,6 +34,9 @@ sdk = CopilotKitSDK(
 )
 
 add_fastapi_endpoint(app, sdk, "/copilotkit")
+
+# Register the export router for PDF export functionality
+app.include_router(export_router)
 
 # add new route for health check
 @app.get("/health")

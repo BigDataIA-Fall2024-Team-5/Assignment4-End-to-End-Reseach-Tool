@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button"; // Import Button component
+import { Button } from "@/components/ui/button";
 import {
   useCoAgent,
   useCoAgentStateRender,
@@ -110,8 +110,8 @@ export function ResearchCanvas() {
   const [isEditResourceOpen, setIsEditResourceOpen] = useState(false);
 
   const handleCardClick = (resource: Resource) => {
-    setEditResource({ ...resource }); // Ensure a new object is created
-    setOriginalUrl(resource.url); // Store the original URL
+    setEditResource({ ...resource });
+    setOriginalUrl(resource.url);
     setIsEditResourceOpen(true);
   };
 
@@ -128,24 +128,72 @@ export function ResearchCanvas() {
     }
   };
 
-  // Function to handle exporting the research draft as a .txt file
-  const exportDraftAsTxt = (fileName: string) => {
-    const element = document.createElement("a");
-    const file = new Blob([state.report || ""], { type: "text/plain" });
-    element.href = URL.createObjectURL(file);
-    element.download = fileName; // Name of the downloaded file
-    document.body.appendChild(element); // Required for Firefox compatibility
-    element.click();
-  };
+  // Function to handle exporting the research draft as a PDF
+  const exportDraftAsPdf = async () => {
+    try {
+      const response = await fetch("/api/export/pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ draft: state.report || "" }),
+      });
 
-  // Function to handle exporting the research draft as PDF
-  const exportDraftAsPdf = () => {
-    exportDraftAsTxt("research_draft.pdf"); // Placeholder for PDF functionality
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF");
+      }
+
+      // Convert the response to a Blob for download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Trigger download of the PDF
+      const pdfLink = document.createElement("a");
+      pdfLink.href = url;
+      pdfLink.download = "research_draft.pdf";
+      document.body.appendChild(pdfLink);
+      pdfLink.click();
+      pdfLink.remove();
+
+      // Clean up the URL object
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting draft as PDF:", error);
+    }
   };
 
   // Function to handle exporting the research draft as Codelabs
-  const exportDraftAsCodelabs = () => {
-    exportDraftAsTxt("research_draft_codelabs.txt"); // Placeholder for Codelabs functionality
+  const exportDraftAsCodelabs = async () => {
+    try {
+      const response = await fetch("/api/export/codelabs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ draft: state.report || "" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate Codelabs file");
+      }
+
+      // Convert the response to a Blob for download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Trigger download of the Codelabs text file
+      const txtLink = document.createElement("a");
+      txtLink.href = url;
+      txtLink.download = "research_draft_codelabs.txt";
+      document.body.appendChild(txtLink);
+      txtLink.click();
+      txtLink.remove();
+
+      // Clean up the URL object
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting draft as Codelabs:", error);
+    }
   };
 
   return (
