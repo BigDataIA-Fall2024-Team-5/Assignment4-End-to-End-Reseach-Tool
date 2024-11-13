@@ -48,7 +48,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
             {"state_key": "report", "tool": "WriteReport", "tool_argument": "report"},
             {"state_key": "research_question", "tool": "WriteResearchQuestion", "tool_argument": "research_question"},
         ],
-        emit_tool_calls=["DeleteResources", "DocumentSelection", "RAGQuery", "ArxivSearch"]
+        emit_tool_calls=["DeleteResources", "DocumentSelection", "RAGQuery"]
     )
 
     # Retrieve or initialize state variables
