@@ -120,4 +120,27 @@ async def chat_node(state: AgentState, config: RunnableConfig):
         *state["messages"],
     ], config)
 
-    return {"messages": response}
+    ai_message = cast(AIMessage, response)
+
+    if ai_message.tool_calls:
+        if ai_message.tool_calls[0]["name"] == "WriteReport":
+            report = ai_message.tool_calls[0]["args"].get("report", "")
+            return {
+                "report": report,
+                "messages": [ai_message, ToolMessage(
+                    tool_call_id=ai_message.tool_calls[0]["id"],
+                    content="Report written."
+                )]
+            }
+        if ai_message.tool_calls[0]["name"] == "WriteResearchQuestion":
+            return {
+                "research_question": ai_message.tool_calls[0]["args"]["research_question"],
+                "messages": [ai_message, ToolMessage(
+                    tool_call_id=ai_message.tool_calls[0]["id"],
+                    content="Research question written."
+                )]
+            }
+
+    return {
+        "messages": response
+    }
