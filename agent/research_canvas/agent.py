@@ -11,6 +11,7 @@ from research_canvas.search import search_node
 from research_canvas.delete import delete_node, perform_delete_node
 from research_canvas.document_selection import document_selection_agent
 from research_canvas.rag import rag_agent  # Ensure this imports your RAG agent
+from research_canvas.arxiv_search import arxiv_search_node
 
 # Define the workflow
 workflow = StateGraph(AgentState)
@@ -25,6 +26,7 @@ workflow.add_node("perform_delete_node", perform_delete_node)
 # Add new agent nodes for document selection and RAG querying
 workflow.add_node("document_selection_agent", document_selection_agent)
 workflow.add_node("rag_agent", rag_agent)
+workflow.add_node("arxiv_search_node", arxiv_search_node)
 
 # Define routing logic for handling specific tool calls
 def route(state):
@@ -39,11 +41,9 @@ def route(state):
             if tool_name == "DocumentSelection":
                 return "document_selection_agent"
             elif tool_name == "RAGQuery":
-                # Extract query and publication_id from tool call args
                 query = ai_message.tool_calls[0]["args"].get("query")
                 publication_id = ai_message.tool_calls[0]["args"].get("publication_id")
                 if query and publication_id:
-                    # Store query and publication_id in state for rag_agent
                     state["query"] = query
                     state["publication_id"] = publication_id
                     return "rag_agent"
@@ -52,6 +52,8 @@ def route(state):
                     return END  # Handle this as an error case if values are missing
             elif tool_name == "Search":
                 return "search_node"
+            elif tool_name == "ArxivSearch":  # New tool routing for Arxiv search
+                return "arxiv_search_node"
             elif tool_name == "DeleteResources":
                 return "delete_node"
 
@@ -62,8 +64,9 @@ def route(state):
 memory = MemorySaver()
 workflow.set_entry_point("download")
 workflow.add_edge("download", "chat_node")
-workflow.add_conditional_edges("chat_node", route, ["document_selection_agent", "rag_agent", "search_node", "delete_node", END])
+workflow.add_conditional_edges("chat_node", route, ["document_selection_agent", "rag_agent", "search_node", "arxiv_search_node", "delete_node", END])
 workflow.add_edge("delete_node", "perform_delete_node")
 workflow.add_edge("perform_delete_node", "chat_node")
 workflow.add_edge("search_node", "download")
+workflow.add_edge("arxiv_search_node", "download")
 graph = workflow.compile(checkpointer=memory, interrupt_after=["delete_node"])

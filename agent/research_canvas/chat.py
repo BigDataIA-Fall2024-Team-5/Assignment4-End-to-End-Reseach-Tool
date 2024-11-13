@@ -1,4 +1,4 @@
-#chat.py
+# chat.py
 """Chat Node"""
 
 from typing import List, cast
@@ -13,6 +13,10 @@ from research_canvas.download import get_resource
 @tool
 def Search(queries: List[str]):  # pylint: disable=invalid-name,unused-argument
     """A list of one or more search queries to find good resources to support the research."""
+
+@tool
+def ArxivSearch(queries: List[str]):  # pylint: disable=invalid-name,unused-argument
+    """A list of one or more search queries to find academic resources from Arxiv."""
 
 @tool
 def WriteReport(report: str):  # pylint: disable=invalid-name,unused-argument
@@ -44,7 +48,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
             {"state_key": "report", "tool": "WriteReport", "tool_argument": "report"},
             {"state_key": "research_question", "tool": "WriteResearchQuestion", "tool_argument": "research_question"},
         ],
-        emit_tool_calls=["DeleteResources", "DocumentSelection", "RAGQuery"]
+        emit_tool_calls=["DeleteResources", "DocumentSelection", "RAGQuery", "ArxivSearch"]
     )
 
     # Retrieve or initialize state variables
@@ -91,7 +95,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
 
     # Otherwise, proceed with the main model response
     response = await model.bind_tools(
-        [Search, WriteReport, WriteResearchQuestion, DeleteResources, DocumentSelection, RAGQuery],
+        [Search, ArxivSearch, WriteReport, WriteResearchQuestion, DeleteResources, DocumentSelection, RAGQuery],
         **ainvoke_kwargs
     ).ainvoke([
         SystemMessage(
@@ -101,6 +105,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
             Guidelines:
             - **Document Selection**: If preprocessed publications are unavailable in the state, use `DocumentSelection` to retrieve them. Once selected, remember the document ID for further queries.
             - **RAGQuery (Retrieval-Augmented Generation)**: Use `RAGQuery` to answer questions about a specific document. Ensure the response indicates that content is based on the selected document's context.
+            - **Arxiv Search**: For academic research papers, use `ArxivSearch` to find relevant resources on Arxiv.
             - **Web Search**: For general research beyond selected documents, use the `Search` tool to gather additional resources online.
             - **Report Writing**: Use `WriteReport` for adding content to the report. Only use this tool to add information to the report; avoid direct responses with report text. Engage the user by suggesting next steps or areas for improvement.
 
