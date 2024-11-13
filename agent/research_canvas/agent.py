@@ -64,7 +64,7 @@ def route(state):
 memory = MemorySaver()
 workflow.set_entry_point("download")
 workflow.add_edge("download", "chat_node")
-workflow.add_conditional_edges("chat_node", route, ["document_selection_agent", "rag_agent", "search_node", "arxiv_search_node", "delete_node", END])
+workflow.add_conditional_edges("chat_node", route, ["document_selection_agent", "rag_agent", "search_node", "arxiv_search_node", "delete_node", "chat_node", END])
 workflow.add_edge("delete_node", "perform_delete_node")
 workflow.add_edge("perform_delete_node", "chat_node")
 workflow.add_edge("search_node", "download")
