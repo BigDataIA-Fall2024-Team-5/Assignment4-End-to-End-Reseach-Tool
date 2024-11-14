@@ -1,28 +1,25 @@
-FROM node:20-slim AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+# Frontend Dockerfile
+
+# Use a Node.js image as a parent image
+FROM node:20
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the package.json and pnpm-lock.yaml files
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm i
+
+# Copy the rest of the application code
 COPY . /app
-WORKDIR /app
 
-# Builder Stage
-FROM base AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN pnpm install --frozen-lockfile
-COPY . .
-RUN --mount=type=secret,id=OPENAI_API_KEY \
-    OPENAI_API_KEY=/run/secrets/OPENAI_API_KEY \
-    pnpm run build
-
-# Production Stage 
-FROM base AS production
-COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.4 /lambda-adapter /opt/extensions/lambda-adapter
-WORKDIR /app
-# Copy the built artifacts from the builder stage
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-# Set the environment variables (if needed)
-ENV NODE_ENV=production
+# Expose the port the app runs on (usually 3000 for Next.js apps)
 EXPOSE 3000
-CMD ["node", "server.js"]
+
+# Run the application
+CMD ["pnpm", "dev"]

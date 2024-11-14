@@ -1,3 +1,20 @@
-.venv
-langgraph.json
+# Ignore Python cache and build files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.eggs/
+
+# Ignore Poetry virtual environments if any
+.venv/
+
+# Ignore both .env and credentials.json (Docker Compose will mount them at runtime)
 .env
+credentials.json
+
+# Ignore other unnecessary files
+Dockerfile
+docker-compose.yml
+README.md
