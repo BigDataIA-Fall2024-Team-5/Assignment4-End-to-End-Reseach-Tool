@@ -1,0 +1,26 @@
+services:
+  backend:
+    image: linatad/backend-image:latest
+    env_file:
+      - ./backend.env   # Use a .env file specific for production if needed
+    volumes:
+      - ./credentials.json:/app/credentials.json  # Mount credentials.json
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  frontend:
+    image: linatad/frontend-image:latest
+    env_file:
+      - ./frontend.env  # Use a .env file specific for production if needed
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
