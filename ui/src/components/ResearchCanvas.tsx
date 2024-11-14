@@ -15,6 +15,7 @@ import { AddResourceDialog } from "./AddResourceDialog";
 import { Resources } from "./Resources";
 import { AgentState, Resource } from "@/lib/types";
 import { useModelSelectorContext } from "@/lib/model-selector-provider";
+import { Dialog } from "@headlessui/react"; // Import dialog from Headless UI
 
 export function ResearchCanvas() {
   const { model, agent } = useModelSelectorContext();
@@ -25,6 +26,10 @@ export function ResearchCanvas() {
       model,
     },
   });
+
+  const [loading, setLoading] = useState(false);
+  const [codelabsLink, setCodelabsLink] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
 
   useCoAgentStateRender({
     name: agent,
@@ -164,6 +169,9 @@ export function ResearchCanvas() {
 
   // Function to handle exporting the research draft as Codelabs
   const exportDraftAsCodelabs = async () => {
+    setLoading(true);
+    setCodelabsLink(null);
+
     try {
       const response = await fetch("/api/export/codelabs", {
         method: "POST",
@@ -174,25 +182,17 @@ export function ResearchCanvas() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to generate Codelabs file");
+        throw new Error("Failed to generate Codelabs link");
       }
 
-      // Convert the response to a Blob for download
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      // Trigger download of the Codelabs text file
-      const txtLink = document.createElement("a");
-      txtLink.href = url;
-      txtLink.download = "research_draft_codelabs.txt";
-      document.body.appendChild(txtLink);
-      txtLink.click();
-      txtLink.remove();
-
-      // Clean up the URL object
-      window.URL.revokeObjectURL(url);
+      const data = await response.json();
+      setCodelabsLink(data.codelabs_link);
+      setIsModalOpen(true); // Open modal when link is ready
     } catch (error) {
-      console.error("Error exporting draft as Codelabs:", error);
+      console.error("Error exporting to Codelabs:", error);
+      setCodelabsLink("Error generating Codelabs link. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -262,7 +262,7 @@ export function ResearchCanvas() {
 
               {/* Export as Codelabs Button */}
               <Button onClick={exportDraftAsCodelabs} className="bg-[#6766FC] text-white">
-                Export as Codelabs
+                {loading ? "Exporting..." : "Export as Codelabs"}
               </Button>
             </div>
           </div>
@@ -278,6 +278,32 @@ export function ResearchCanvas() {
             style={{ minHeight: "200px" }}
           />
         </div>
+
+        {/* Modal for displaying Codelabs link */}
+        {isModalOpen && (
+          <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+              <div className="bg-white p-6 rounded-lg max-w-md mx-auto text-center">
+                <h2 className="text-lg font-medium mb-4">Codelabs Link</h2>
+                {codelabsLink ? (
+                  <a
+                    href={codelabsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    Open your Codelabs document
+                  </a>
+                ) : (
+                  <p>Generating link, please wait...</p>
+                )}
+                <div className="mt-4">
+                  <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+                </div>
+              </div>
+            </div>
+          </Dialog>
+        )}
       </div>
     </div>
   );
