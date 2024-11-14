@@ -1,201 +1,214 @@
-# Assignment3-NVIDIA-MultimodalResearchAssistant
+# Assignment4-End-to-End-Research-Tool
 
-- **Code Lab Link: [[CodeLabs](https://codelabs-preview.appspot.com/?file_id=1yPHSd9AvPMqDpVAzoLdXcD8Y4LPhNvtJBoKSAP7lyfs#0)] [[Google Drive Link](https://docs.google.com/document/d/1yPHSd9AvPMqDpVAzoLdXcD8Y4LPhNvtJBoKSAP7lyfs/edit?usp=sharing)] [[Github Location](/documentation/Assignment%203-NVIDIA%20Multimodal%20Research%20Assistant%20%20.pdf)]**  
-- **Presentation Video Link: [[Google Drive Link](https://drive.google.com/file/d/14n5CKEYc0czH-BZvy5KXZ5TIotqs_TjK/view?usp=sharing)] [[Github Location](/presentation/Assignment3_Demo_Presentation.mp4)]**  
+The **Assignment4-End-to-End-Research-Tool** is an AI-powered research assistant application that automates document ingestion, content extraction, querying, and report generation. It leverages cloud services to streamline research processes, providing both a backend API and a frontend interface.
 
-- **FAST API Link: [[FastAPI deployed in GCP Instance](http://34.148.55.30:8000/)]**  
-- **Streamlit Application Link: [[Streamlit Application deployed in GCP Instance](http://34.148.55.30:8501/)]**  
+## Links
+- **CodeLab**: [[CodeLabs](https://your-codelab-link)] [[Google Drive Link](https://docs.google.com/document/d/1yPHSd9AvPMqDpVAzoLdXcD8Y4LPhNvtJBoKSAP7lyfs/edit?usp=sharing)] [[Github Location](/documentation/Assignment%203-NVIDIA%20Multimodal%20Research%20Assistant%20%20.pdf)]
+- **Presentation**: [[Google Drive](https://your-presentation-link)] [[Github Location](/presentation/Assignment3_Demo_Presentation.mp4)]
+- **Deployed FastAPI**: [[FastAPI Service](http://34.74.193.40:8000/)]
+- **Deployed Frontend**: [[Next.js App](http://34.74.193.40:3000/)]
+- **Docker Repository**: [[DockerHub](https://hub.docker.com/repositories/linatad)]
+- **GitHub Project**: [[GitHub](https://github.com/orgs/BigDataIA-Fall2024-Team-5/projects/8)]
 
-- **Docker Repository: [[Docker Repository](https://hub.docker.com/repositories/linatad)]**   
-- **Github Projects: [[Github projects](https://github.com/orgs/BigDataIA-Fall2024-Team-5/projects/6/)]**  
 
 ## Table of Contents
-1. [Introduction](#introduction) 
-2. [Key Features](#key-features)  
-3. [Project Structure](#project-structure)  
-4. [Installation](#installation)  
-5. [Folder Documentation](#folder-documentation)  
-6. [Usage](#usage)
-7. [Attestation](#attestation)  
-8. [License](#license) 
-
-**Structural Diagram**:
-![Structural Diagram](diagrams/overall_project_architecture.png)
-
-**User Flow Diagram**:
-![User Flow Diagram](diagrams/user_flow_overview.png)
-
-**Backend Workflow Diagram**:
-![User Flow Diagram](diagrams/backend_workflow_overview.png) 
+1. [Introduction](#introduction)
+2. [Key Features](#key-features)
+3. [Project Structure](#project-structure)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [License](#license)
 
 ## Introduction
-The **Assignment3-NVIDIA-MultimodalResearchAssistant** project is designed to facilitate document exploration, summarization, and question-answering using state-of-the-art AI models. It leverages multi-modal retrieval-augmented generation (RAG) techniques using NVIDIA’s large language models, integrated with a robust data pipeline and document management system. The core of this project revolves around automating the ingestion, processing, and querying of research documents from the CFA Institute Research Foundation Publications. With a streamlined frontend powered by Streamlit and a backend built with FastAPI, users can seamlessly explore documents, generate concise summaries, and interact with the data through an intelligent Q/A interface.
+
+The **Assignment4-End-to-End-Research-Tool** is an advanced research assistant application crafted to enhance and automate the research workflow. This tool provides an end-to-end solution for tasks such as document ingestion, content extraction, advanced querying, and streamlined report generation. Utilizing cloud services, the application manages the entire lifecycle of research documents, from data collection and storage to insight retrieval and presentation.
+
+The backend API enables robust document management, indexing, and retrieval, while the frontend interface offers an intuitive platform for interactive exploration. With integrated support for document selection, question answering, and real-time note-taking, the Assignment4-End-to-End-Research-Tool is designed to simplify and accelerate research processes for efficient, data-driven insights.
 
 ## Key Features
-- **Automated PDF Processing**: Extracts text from PDFs and stores them in S3, enabling easy and secure access to publication content.  
-- **AI-Powered Summarization**: Generates concise and clear summaries for publications using NVIDIA’s LLM models, providing key insights and essential information at a glance.  
-- **Interactive Document Exploration**: Offers a user-friendly Streamlit interface for browsing, selecting, and exploring publications with detailed views.  
-- **Data Storage & Management**: Integrates with Snowflake to store and manage publication metadata, including links to publication files and images in S3.  
-- **Multi-Modal Retrieval-Augmented Generation (RAG)**: Uses NVIDIA’s multi-modal RAG model for document interaction and querying, powered by Pinecone as the vector database, allowing efficient exploration and dynamic Q&A sessions.  
-- **Research Notes & Incremental Indexing**: Facilitates taking and saving research notes, which are indexed separately for each document in Pinecone. Users can also query the indexed research notes, ensuring continuous learning and easy retrieval of key insights.
-  
+
+- **CFA Publications Scraping**: Web scrapes research publications from the CFA Institute Publications, gathering essential metadata and storing it for structured access.
+- **Automated PDF Processing and Indexing**: Uses Docling to convert PDFs to Markdown, extract content, chunk data, and index it in Pinecone, enabling efficient retrieval for document-specific queries.
+- **Research Document Management**: Retrieves research publications from Snowflake, generates presigned URLs for PDFs stored in Amazon S3, and provides downloadable links for easy access.
+- **Interactive Chat Interface**: Utilizes LangChain for AI-powered, context-aware responses, allowing users to ask questions and receive insights directly related to specific document content.
+- **Arxiv and Web Search**: Allows users to search for relevant academic resources from Arxiv and general information from the web to enhance their research context.
+- **Google Drive Export**: Exports research drafts to Google Docs in a Codelabs format, providing a structured, shareable document preview.
+- **PDF Export for Research Drafts**: Allows users to generate a downloadable PDF of their research draft directly from the application.
 
 ## Project Structure
 
-📦 Assignment3-NVIDIA-MultimodalResearchAssistant  
-├── airflow_docker_pipelines  
+📂 **Assignment4-End-to-End-Research-Tool**  
+├── **[LICENSE](LICENSE)**  
+├── **[README.md](README.md)**  
+├── **[backend](backend/README.md)**  
 │   ├── Dockerfile  
-│   ├── docker-compose.yml  
-│   ├── pdf_extraction_dag.py  
-│   ├── scrape_cfa_publications_dag.py  
-│   ├── snowflake_load_dag.py  
-│   ├── snowflake_setup_dag.py  
-│  
-├── backend  
-│   ├── fast_api  
-│   │   ├── fastapi_main.py  
-│   │   ├── routers  
-│   │   │   ├── rag_router.py  
-│   │   │   ├── s3_router.py  
-│   │   │   ├── snowflake_router.py  
-│   │   │   ├── summarization_router.py  
-│   │   └── Dockerfile  
-│   ├── utils  
-│   │   ├── helper_functions.py  
-│   │   └── pdf_processor.py  
-│   ├── requirements.txt  
-│  
-├── frontend  
-│   ├── app.py  
-│   ├── streamlit_pages  
-│   │   ├── detail_view.py  
-│   │   ├── grid_view.py  
-│   │   ├── qa_interface.py  
-│   ├── utils.py  
+│   ├── credentials.json  
+│   ├── poetry.lock  
+│   ├── pyproject.toml  
+│   └── research_canvas  
+│       ├── __init__.py  
+│       ├── agent.py  
+│       ├── arxiv_search.py  
+│       ├── chat.py  
+│       ├── delete.py  
+│       ├── demo.py  
+│       ├── document_selection.py  
+│       ├── download.py  
+│       ├── export_router.py  
+│       ├── model.py  
+│       ├── rag.py  
+│       ├── search.py  
+│       └── state.py  
+├── **[airflow_docker_pipelines](airflow_docker_pipelines/README.md)**  
 │   ├── Dockerfile  
-│   ├── requirements.txt  
-│   ├── no-image-placeholder.png  
-│  
-├── .env  
-├── LICENSE  
+│   ├── README.md  
+│   ├── dags  
+│   │   ├── pdf_processing_pipeline_dag.py  
+│   │   ├── scrape_cfa_publications_dag.py  
+│   │   ├── snowflake_load_dag.py  
+│   │   └── snowflake_setup_dag.py  
+│   ├── docker-compose.yaml  
+│   └── requirements.txt  
+├── **docker-compose.yml**  
+├── **poetry.lock**  
+├── **pyproject.toml**  
+├── **[ui](ui/README.md)**  
+│   ├── components.json  
+│   ├── next.config.mjs  
+│   ├── package.json  
+│   ├── pnpm-lock.yaml  
+│   ├── postcss.config.mjs  
+│   ├── tailwind.config.ts  
+│   ├── tsconfig.json  
+│   └── src  
+│       ├── app  
+│       │   ├── Main.tsx  
+│       │   ├── api  
+│       │   │   ├── copilotkit  
+│       │   │   │   └── route.ts  
+│       │   │   └── export  
+│       │   │       ├── codelabs  
+│       │   │       └── pdf  
+│       ├── components  
+│       └── lib  
 
-## Folder Documentation
-- **[Airflow Docker Pipeline](./airflow_docker_pipelines/README.md)**: Contains Airflow DAGs and scripts for automating PDF processing workflows.  
-  - **[pdf_extraction_dag.py](./airflow_docker_pipelines/dags/pdf_extraction_dag.py)**: Extracts text from PDFs and uploads them to an S3 bucket using PyMuPDF.  
-  - **[scrape_cfa_publications_dag.py](./airflow_docker_pipelines/dags/scrape_cfa_publications_dag.py)**: Scrapes CFA publications, stores data in S3, and saves publication metadata in a CSV file.  
-  - **[snowflake_setup_dag.py](./airflow_docker_pipelines/dags/snowflake_setup_dag.py)**: Sets up the Snowflake infrastructure including a warehouse, database, schema, and table.  
-  - **[snowflake_load_dag.py](./airflow_docker_pipelines/dags/snowflake_load_dag.py)**: Loads publication data from the CSV in S3 to Snowflake using a merge operation.  
-
-- **[Backend](./backend/README.md)**: Includes FastAPI backend services, routers, and utilities for S3, Snowflake, and NVIDIA API integration.  
-  - **[fast_api](./backend/fast_api/README.md)**: Main FastAPI application with routers for document exploration, summarization, research notes, and S3 interactions.  
-    - **[rag_router.py](./backend/fast_api/routers/rag_router.py)**: Router for indexing and querying documents using multi-modal RAG and Pinecone.  
-    - **[s3_router.py](./backend/fast_api/routers/s3_router.py)**: Router for fetching images, PDFs, summaries, and saving research notes to S3.  
-    - **[snowflake_router.py](./backend/fast_api/routers/snowflake_router.py)**: Router for fetching publication data from Snowflake.  
-    - **[summarization_router.py](./backend/fast_api/routers/summarization_router.py)**: Router for generating concise summaries of publications using NVIDIA’s AI models.  
-  - **[utils](./backend/utils/README.md)**: Utility functions for processing PDFs, managing S3 interactions, and handling various helper operations.  
-
-- **[Frontend](./frontend/README.md)**: Contains the Streamlit application for user interaction and document exploration.  
-  - **[streamlit_pages](./frontend/streamlit_pages/README.md)**: Pages for grid view, detailed view, and Q/A interface within the Streamlit app.  
-    - **[detail_view.py](./frontend/streamlit_pages/detail_view.py)**: Displays detailed information about selected publications with options for refreshing summaries and viewing research notes.  
-    - **[grid_view.py](./frontend/streamlit_pages/grid_view.py)**: Displays a grid of available publications with clickable images for easy navigation.  
-    - **[qa_interface.py](./frontend/streamlit_pages/qa_interface.py)**: Provides a Q/A interface for interacting with publications using the multi-modal RAG model.  
-  - **[utils.py](./frontend/utils.py)**: Contains utility functions to interact with the backend API, handle session state, fetch images, summaries, research notes, and manage the Q/A interface.
-  
 
 ## Installation
-### Prerequisites
-- **Docker & Docker Compose**: Required for containerizing and deploying the application.  
-- **Python 3.11**: Ensure you have the correct version of Python installed.  
-- **AWS Account**: For storing files and extracted data in S3.  
-- **Snowflake Account**: For storing and managing publication metadata.  
-- **NVIDIA API Key**: Required for generating summaries and other AI-powered tasks using NVIDIA’s services.  
-- **Pinecone Account and API Key**: For storing and querying vector embeddings.  
-- **Poetry**: A dependency management tool. You can use Poetry to install dependencies and run the frontend and backend individually for local development without Docker. Poetry will handle all the project dependencies, making it easier to develop and debug separately.
 
-### Step-by-Step Setup
+### Prerequisites
+- **Docker & Docker Compose**: Required for containerization.
+- **Python 3.11**: Ensure compatibility with Python 3.11.
+- **API Credentials**: Set up AWS, Snowflake, NVIDIA, Pinecone, and OpenAI credentials in the `.env` file.
+- **Google Cloud Credentials**: Download `credentials.json` from the Google Cloud Console to enable access to Google Drive and Google Docs.
+- **Poetry**: Required for dependency management.
+
+### Setup Steps
 1. **Clone the Repository**:
 ```bash
-   git clone https://github.com/YourRepo/Assignment3-NVIDIA-MultimodalResearchAssistant.git  
-   cd Assignment3-NVIDIA-MultimodalResearchAssistant  
+git clone https://github.com/your-repo/Assignment4-End-to-End-Research-Tool.git
+cd Assignment4-End-to-End-Research-Tool
 ```
+2. **Airflow Pipeline Setup**:
+**Navigate to the Airflow Directory**:
 
-2. **Setup Environment Variables**:  
-   Create an `.env` file in the root directory and add your credentials:  
-   AWS_ACCESS_KEY_ID='your-access-key-id'  
-   AWS_SECRET_ACCESS_KEY='your-secret-access-key'  
-   AWS_REGION='your-aws-region'  
-   S3_BUCKET_NAME='your-s3-bucket-name'  
-   SNOWFLAKE_ACCOUNT='your-snowflake-account'  
-   SNOWFLAKE_USER='your-snowflake-user'  
-   SNOWFLAKE_PASSWORD='your-snowflake-password'  
-   SNOWFLAKE_ROLE='your-snowflake-role'  
-   NVIDIA_API_KEY='your-nvidia-api-key'  
-   PINECONE_API_KEY='your-pinecone-api-key'  
-   FASTAPI_URL='http://localhost:8000'  
-
-3. **Initialize Airflow and Build Airflow Docker Image**:  
 ```bash
-   cd airflow_docker_pipeline  
-   docker build -t airflow-scrape:latest .  
-   AIRFLOW_IMAGE_NAME=airflow-scrape:latest AIRFLOW_UID=0 _AIRFLOW_WWW_USER_USERNAME=admin _AIRFLOW_WWW_USER_PASSWORD=admin123 AWS_ACCESS_KEY_ID='your-access-key-id' AWS_SECRET_ACCESS_KEY='your-secret-access-key' AWS_REGION='your-aws-region' S3_BUCKET_NAME='your-s3-bucket-name' SNOWFLAKE_ACCOUNT='your-snowflake-account' SNOWFLAKE_USER='your-snowflake-user' SNOWFLAKE_PASSWORD='your-snowflake-password' SNOWFLAKE_ROLE='your-snowflake-role' docker-compose up airflow-init  
+cd airflow_docker_pipelines
 ```
 
-4. **Run the Airflow Pipelines in the Correct Sequence**: 
- 
-- **Scrape CFA Publications**:  
+**Build Docker Image for Airflow**:
 ```bash
-     AIRFLOW_IMAGE_NAME=airflow-scrape:latest AIRFLOW_UID=0 _AIRFLOW_WWW_USER_USERNAME=admin _AIRFLOW_WWW_USER_PASSWORD=admin123 AWS_ACCESS_KEY_ID='your-access-key-id' AWS_SECRET_ACCESS_KEY='your-secret-access-key' AWS_REGION='your-aws-region' S3_BUCKET_NAME='your-s3-bucket-name' SNOWFLAKE_ACCOUNT='your-snowflake-account' SNOWFLAKE_USER='your-snowflake-user' SNOWFLAKE_PASSWORD='your-snowflake-password' SNOWFLAKE_ROLE='your-snowflake-role' docker-compose run airflow-cli dags trigger scrape_cfa_publications_dag  
+docker build -t airflow-a4:latest .
 ```
-
-- **Setup Snowflake**:  
+**Run Airflow Initialization with Environment Variables**:
+Replace the placeholder values with your credentials before running.
 ```bash
-     AIRFLOW_IMAGE_NAME=airflow-scrape:latest AIRFLOW_UID=0 _AIRFLOW_WWW_USER_USERNAME=admin _AIRFLOW_WWW_USER_PASSWORD=admin123 AWS_ACCESS_KEY_ID='your-access-key-id' AWS_SECRET_ACCESS_KEY='your-secret-access-key' AWS_REGION='your-aws-region' S3_BUCKET_NAME='your-s3-bucket-name' SNOWFLAKE_ACCOUNT='your-snowflake-account' SNOWFLAKE_USER='your-snowflake-user' SNOWFLAKE_PASSWORD='your-snowflake-password' SNOWFLAKE_ROLE='your-snowflake-role' docker-compose run airflow-cli dags trigger snowflake_setup_dag  
+AIRFLOW_IMAGE_NAME=airflow-a4:latest AIRFLOW_UID=0 _AIRFLOW_WWW_USER_USERNAME=admin _AIRFLOW_WWW_USER_PASSWORD=admin123 AWS_ACCESS_KEY_ID='<YOUR_AWS_ACCESS_KEY>' AWS_SECRET_ACCESS_KEY='<YOUR_AWS_SECRET_KEY>' AWS_REGION='<YOUR_AWS_REGION>' S3_BUCKET_NAME='<YOUR_S3_BUCKET>' SNOWFLAKE_ACCOUNT='<YOUR_SNOWFLAKE_ACCOUNT>' SNOWFLAKE_USER='<YOUR_SNOWFLAKE_USER>' SNOWFLAKE_PASSWORD='<YOUR_SNOWFLAKE_PASSWORD>' SNOWFLAKE_ROLE='<YOUR_SNOWFLAKE_ROLE>' NVIDIA_API_KEY='<YOUR_NVIDIA_API_KEY>' PINECONE_API_KEY='<YOUR_PINECONE_API_KEY>' docker-compose up airflow-init
 ```
 
-- **Load Data into Snowflake**:  
+3. **Enviroment Variables Setup**
+In the **backend** folder:
+```
+AWS_ACCESS_KEY_ID='<YOUR_AWS_ACCESS_KEY>'
+AWS_SECRET_ACCESS_KEY='<YOUR_AWS_SECRET_KEY>'
+AWS_REGION='<YOUR_AWS_REGION>'
+S3_BUCKET_NAME='<YOUR_S3_BUCKET>'
+
+SNOWFLAKE_ACCOUNT='<YOUR_SNOWFLAKE_ACCOUNT>'
+SNOWFLAKE_USER='<YOUR_SNOWFLAKE_USER>'
+SNOWFLAKE_PASSWORD='<YOUR_SNOWFLAKE_PASSWORD>'
+SNOWFLAKE_ROLE='<YOUR_SNOWFLAKE_ROLE>'
+
+NVIDIA_API_KEY='<YOUR_NVIDIA_API_KEY>'
+PINECONE_API_KEY='<YOUR_PINECONE_API_KEY>'
+
+OPENAI_API_KEY='<YOUR_OPENAI_API_KEY>'
+TAVILY_API_KEY='<YOUR_TAVILY_API_KEY>'
+```
+
+In the **ui** folder:
+```
+REMOTE_ACTION_URL='http://localhost:8000'  # For Docker Compose
+OPENAI_API_KEY='<YOUR_OPENAI_API_KEY>'
+```
+
+Ensure `credentials.json` (Google Cloud credentials for Google Drive and Docs access) is placed inside the **backend** folder.
+To run the entire setup using Docker Compose:
+
+4. **Application Setup (Method 1 - Direct)**:
+**Backend Setup**:
 ```bash
-     AIRFLOW_IMAGE_NAME=airflow-scrape:latest AIRFLOW_UID=0 _AIRFLOW_WWW_USER_USERNAME=admin _AIRFLOW_WWW_USER_PASSWORD=admin123 AWS_ACCESS_KEY_ID='your-access-key-id' AWS_SECRET_ACCESS_KEY='your-secret-access-key' AWS_REGION='your-aws-region' S3_BUCKET_NAME='your-s3-bucket-name' SNOWFLAKE_ACCOUNT='your-snowflake-account' SNOWFLAKE_USER='your-snowflake-user' SNOWFLAKE_PASSWORD='your-snowflake-password' SNOWFLAKE_ROLE='your-snowflake-role' docker-compose run airflow-cli dags trigger snowflake_load_dag  
+cd backend
+poetry install
+sudo apt install wkhtmltopdf
+poetry run demo
 ```
-
-- **Extract PDF Summarization**:  
+**Frontend Setup**:
 ```bash
-     AIRFLOW_IMAGE_NAME=airflow-scrape:latest AIRFLOW_UID=0 _AIRFLOW_WWW_USER_USERNAME=admin _AIRFLOW_WWW_USER_PASSWORD=admin123 AWS_ACCESS_KEY_ID='your-access-key-id' AWS_SECRET_ACCESS_KEY='your-secret-access-key' AWS_REGION='your-aws-region' S3_BUCKET_NAME='your-s3-bucket-name' SNOWFLAKE_ACCOUNT='your-snowflake-account' SNOWFLAKE_USER='your-snowflake-user' SNOWFLAKE_PASSWORD='your-snowflake-password' SNOWFLAKE_ROLE='your-snowflake-role' docker-compose run airflow-cli dags trigger pdf_extraction_dag  
+cd ui
+pnpm i
+pnpm dev
 ```
+4. Application Setup (Method 2 - Docker Compose):
+If using Docker Compose, ensure the following in the `.env` files:
 
-5. **Build and Start the Docker Containers for Backend and Frontend**:  
+Modify your ui/.env 
+
+REMOTE_ACTION_URL='http://backend:8000'  # For Docker Compose
+
 ```bash
-   cd ../  
-   docker-compose up --build  
+docker-compose up
 ```
-   This command will start both the FastAPI service on `http://localhost:8000` and the Streamlit app on `http://localhost:8501`.  
 
-### Usage
+## Usage
 
-Once the application is up and running, you can access it at `http://localhost:8501`. Here are the main features accessible through the Streamlit interface:
+### 1. Airflow Pipelines
+   - **Initialize Airflow**:
+     ```bash
+     cd airflow_docker_pipelines
+     docker-compose up airflow-init
+     ```
+   - **Run Pipelines**:
+     - **CFA Publications Scraper**: Scrapes CFA publications and uploads data to S3.
+     - **Snowflake Setup**: Initializes the database resources needed for document storage and retrieval in Snowflake.
+     - **Snowflake Load**:  Loads the data into the Snowflake table for document storage and retrieval.
+     - **PDF Processing Pipeline**: Fetches PDF data from Snowflake, processes the PDFs using Docling to convert them to Markdown, chunks the content, and indexes it in Pinecone for efficient retrieval.
+     
+     
 
-1. **Document Exploration**:
-   - Explore documents using a grid view of publication covers. You can select any publication to view its details.
-   - On selecting a publication, you are taken to the detail view, where you can see key details such as the author, date published, and a brief summary.
-   - The summary is automatically generated using NVIDIA's LLM model.
+### 2. Research Assistant Interface
+   - Access the **Next.js Frontend** at `http://localhost:3000`.
+   - Use the **Chat Interface** within the app to:
+     - Select documents and generate research notes.
+     - Query document content stored in Snowflake using RAG (Retrieval-Augmented Generation).
+     - Conduct Arxiv and web searches for additional academic and general research resources.
 
-2. **Research Notes and Q/A Interface**:
-   - Within the detail view, you can view or add research notes for each publication. Research notes can be saved for future reference.
-   - There is an option to navigate to the Q/A Interface, where you can interact with the selected document using a Question/Answer system.
-   - The Q/A Interface utilizes a Multi-Modal RAG (Retrieval-Augmented Generation) model powered by NVIDIA, and uses Pinecone as the vector database.
-   - You can query the document or the research notes separately, as the research notes are also indexed within Pinecone.
-   - Answers from the Q/A interaction can be saved directly into the research notes for that publication.
+### 3. Backend API
+   - Access the backend API at `http://localhost:8000`.
+   - Visit `http://localhost:8000/docs` to view the Swagger UI, which provides a complete interactive documentation of the API endpoints.
 
-## Attestation
+### 4. Exporting Research
+   - To export formatted Codelabs documents, use the `/export/codelabs` API endpoint. This endpoint uploads formatted drafts to Google Docs and provides a link to preview in Codelabs.
 
-WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR
-ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK
+## License
 
-**Contribution**
-
-- **Dharun Karthick Ramaraj**: 33.33%
-- **Nikhil Godalla**: 33.33%
-- **Linata Rajendra Deshmukh**: 33.33%
-
-### License
-
-This project is licensed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

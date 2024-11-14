@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UI README
 
-## Getting Started
+This folder contains the frontend UI built using Next.js, offering an interactive interface for querying, searching, and interacting with research data.
 
-First, run the development server:
+## Project Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+📂 ui  
+├── components.json  
+├── next.config.mjs  
+├── package.json  
+├── pnpm-lock.yaml  
+├── postcss.config.mjs  
+├── tailwind.config.ts  
+├── tsconfig.json  
+└── src  
+   ├── app  
+   │   ├── Main.tsx  
+   │   ├── api  
+   │   │   ├── copilotkit  
+   │   │   │   └── route.ts  
+   │   │   └── export  
+   │   │       ├── codelabs  
+   │   │       └── pdf  
+   ├── components  
+   └── lib  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
+The UI requires specific environment variables for interacting with the backend services. Create an `.env` file in the `ui` directory and add the following:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# .env file in UI
+REMOTE_ACTION_URL='http://localhost:8000'  # Use 'http://backend:8000' if using Docker Compose
+OPENAI_API_KEY='sk-...your_openai_api_key_here...'
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup and Run
 
-## Learn More
+1. **Install dependencies**: Use `pnpm` for package management.
+   
+   ```bash
+   pnpm i
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Run the development server**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   pnpm dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   By default, the UI will be available at `http://localhost:3000`.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
