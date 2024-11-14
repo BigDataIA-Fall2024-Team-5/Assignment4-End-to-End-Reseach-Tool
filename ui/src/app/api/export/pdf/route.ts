@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   const draft = await req.json();
 
-  const response = await fetch('http://localhost:8000/export/pdf', {
+  const response = await fetch(`${process.env.REMOTE_ACTION_URL}/export/pdf`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
