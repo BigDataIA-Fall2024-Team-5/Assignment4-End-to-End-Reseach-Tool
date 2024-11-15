@@ -4,7 +4,7 @@ The **Assignment4-End-to-End-Research-Tool** is an AI-powered research assistant
 
 ## Links
 - **CodeLab**: [[CodeLabs](https://your-codelab-link)] [[Google Drive Link](https://docs.google.com/document/d/1yPHSd9AvPMqDpVAzoLdXcD8Y4LPhNvtJBoKSAP7lyfs/edit?usp=sharing)] [[Github Location](/documentation/Assignment%203-NVIDIA%20Multimodal%20Research%20Assistant%20%20.pdf)]
-- **Presentation**: [[Google Drive](https://your-presentation-link)] [[Github Location](/presentation/Assignment3_Demo_Presentation.mp4)]
+- **Presentation**: [[Google Drive](https://drive.google.com/file/d/1_ikaHgcjb5ok8RrVCoyYYmZ-_vaIfZMM/view?usp=sharing)] [[Github Location](/demo/Assignment4_Demo_Presentation.mp4)]
 - **Deployed FastAPI**: [[FastAPI Service](http://34.74.193.40:8000/)]
 - **Deployed Frontend**: [[Next.js App](http://34.74.193.40:3000/)]
 - **Docker Repository**: [[DockerHub](https://hub.docker.com/repositories/linatad)]
