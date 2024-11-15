@@ -10,6 +10,9 @@ The **Assignment4-End-to-End-Research-Tool** is an AI-powered research assistant
 - **Docker Repository**: [[DockerHub](https://hub.docker.com/repositories/linatad)]
 - **GitHub Project**: [[GitHub](https://github.com/orgs/BigDataIA-Fall2024-Team-5/projects/8)]
 
+## Architecture Diagram
+![image](https://github.com/user-attachments/assets/127a641e-fd13-4b6b-8605-412b780f4922)
+
 
 ## Table of Contents
 1. [Introduction](#introduction)
