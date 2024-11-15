@@ -3,7 +3,7 @@
 The **Assignment4-End-to-End-Research-Tool** is an AI-powered research assistant application that automates document ingestion, content extraction, querying, and report generation. It leverages cloud services to streamline research processes, providing both a backend API and a frontend interface.
 
 ## Links
-- **CodeLab**: [[CodeLabs](https://your-codelab-link)] [[Google Drive Link](https://docs.google.com/document/d/1yPHSd9AvPMqDpVAzoLdXcD8Y4LPhNvtJBoKSAP7lyfs/edit?usp=sharing)] [[Github Location](/documentation/Assignment%203-NVIDIA%20Multimodal%20Research%20Assistant%20%20.pdf)]
+- **CodeLab**: [[CodeLabs](https://codelabs-preview.appspot.com/?file_id=12sFkoxTaN24vV2L67_bI0NXzbAVMA2sul0otP7VutMw#0)] [[Google Drive Link](https://docs.google.com/document/d/12sFkoxTaN24vV2L67_bI0NXzbAVMA2sul0otP7VutMw/edit?usp=sharing)] [[Github Location](/docs/End-to-End-Reseach-Tool-docs.pdf)]
 - **Presentation**: [[Google Drive](https://drive.google.com/file/d/1_ikaHgcjb5ok8RrVCoyYYmZ-_vaIfZMM/view?usp=sharing)] [[Github Location](/demo/Assignment4_Demo_Presentation.mp4)]
 - **Deployed FastAPI**: [[FastAPI Service](http://34.74.193.40:8000/)]
 - **Deployed Frontend**: [[Next.js App](http://34.74.193.40:3000/)]
@@ -11,7 +11,7 @@ The **Assignment4-End-to-End-Research-Tool** is an AI-powered research assistant
 - **GitHub Project**: [[GitHub](https://github.com/orgs/BigDataIA-Fall2024-Team-5/projects/8)]
 
 ## Architecture Diagram
-![image](https://github.com/user-attachments/assets/127a641e-fd13-4b6b-8605-412b780f4922)
+![image](diagrams/Architecture.png)
 
 
 ## Table of Contents
